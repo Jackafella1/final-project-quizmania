@@ -1,24 +1,28 @@
-require('dotenv').config();
+import dotenv from 'dotenv';
+dotenv.config();
+//import { createClient } from '@supabase/supabase-js';
 
 const PORT = process.env.PORT || 5002;
 const HOST = process.env.HOST || '0.0.0.0';
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+//const supabaseUrl = process.env.SUPABASE_URL;
+//const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-console.log('Supabase URL:', supabaseUrl);
+//const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
+
+//console.log('Supabase URL:', supabaseUrl);
 
 // socket IO allows us to set up web sockets
 // these connect to the sever, and leaves the connection to the server open
 // this allows for real time communication between the server and the client
 
 // load server
-const express = require("express");
+import express, { json } from "express";
 // load cors
-const cors = require("cors");
+import cors from "cors";
 
 const app = express();
 
-console.log('Supabase URL:', supabaseUrl);
+//console.log('Supabase URL:', supabaseUrl);
 
 app.use(
   cors({
@@ -31,7 +35,7 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.json());
+app.use(json());
 
 // Test API Route
 app.get("/api/questions", async (req, res) => {
@@ -54,8 +58,10 @@ const users = {};
 const userScores = {};
 
 // Create HTTP server and intergrate socket.io
-const server = require("http").createServer(app);
-const io = require("socket.io")(server, {
+import { createServer } from "http";
+const server = createServer(app);
+import { Server } from "socket.io";
+const io = new Server(server, {
   cors: {
     origin: [
       /* "http://localhost:5173", */
@@ -129,7 +135,7 @@ io.on("connection", (socket) => {
 
   // Add this handler for answer submissions
   socket.on("submit-answer", (data) => {
-    const { isCorrect, questionIndex } = data;
+    const { isCorrect } = data;
 
     // Make sure the user exists
     if (users[socket.id]) {
