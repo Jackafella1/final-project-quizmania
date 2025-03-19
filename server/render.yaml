@@ -1,9 +1,9 @@
 services:
   - type: web
-    name: final-project-airon-chefs-backend
+    name: final-project-quiz-mania-backend
     env: node
     plan: free
-    buildCommand: "npm run build"
+    buildCommand: 
     startCommand: "npm start"
     rootDir: .
     envVars:
