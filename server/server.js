@@ -1,3 +1,12 @@
+require('dotenv').config();
+
+const PORT = process.env.PORT || 5002;
+const HOST = process.env.HOST || '0.0.0.0';
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+console.log('Supabase URL:', supabaseUrl);
+
 // socket IO allows us to set up web sockets
 // these connect to the sever, and leaves the connection to the server open
 // this allows for real time communication between the server and the client
@@ -8,8 +17,8 @@ const express = require("express");
 const cors = require("cors");
 
 const app = express();
-const PORT = process.env.PORT || 5002;
-const HOST = `0.0.0.0`;
+
+console.log('Supabase URL:', supabaseUrl);
 
 app.use(
   cors({
