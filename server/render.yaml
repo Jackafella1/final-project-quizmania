@@ -3,9 +3,11 @@ services:
     name: final-project-quiz-mania-backend
     env: node
     plan: free
-    buildCommand: 
+    buildCommand: npm run build
     startCommand: "npm start"
-    rootDir: .
+    rootDir: sever
     envVars:
-      - key: NODE_ENV
-        value: production
+      - key: PORT
+        value: 50002
+      - key: HOST 
+        value: 0.0.0.0
