@@ -52,22 +52,53 @@ app.use(
 );
 app.use(json());
 
-// Test API Route
-app.get("/api/questions", async (req, res) => {
-  try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000);
+// In-memory cache for questions
+let cachedQuestions = null;
+const CACHE_DURATION = 60 * 60 * 1000; // Cache for 1 hour
 
-    const response = await fetch(
-      "https://opentdb.com/api.php?amount=10&type=multiple",
-      { signal: controller.signal }
-    );
+// Function to fetch questions from OpenTDB
+async function fetchQuestions(amount = 10, category = null, difficulty = null, type = "multiple") {
+  try {
+    let url = `https://opentdb.com/api.php?amount=${amount}&type=${type}`;
+    if (category) url += `&category=${category}`;
+    if (difficulty) url += `&difficulty=${difficulty}`;
+
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10-second timeout
+
+    const response = await fetch(url, { signal: controller.signal });
     clearTimeout(timeoutId);
 
     const data = await response.json();
-    res.json(data.results);
+    if (!data.results || data.results.length === 0) {
+      throw new Error("No questions returned from OpenTDB");
+    }
+    return data.results;
   } catch (error) {
     console.error("Error fetching questions:", error);
+    throw error;
+  }
+}
+
+// Test API Route
+app.get("/api/questions", async (req, res) => {
+  try {
+    // Check if questions are cached and not expired
+    if (cachedQuestions && Date.now() - cachedQuestions.timestamp < CACHE_DURATION) {
+      console.log("Serving questions from cache for /api/questions");
+      return res.json(cachedQuestions.data);
+    }
+
+    // Fetch new questions if cache is empty or expired
+    console.log("Fetching new questions from OpenTDB for /api/questions");
+    const questions = await fetchQuestions(10, null, null, "multiple");
+    cachedQuestions = {
+      data: questions,
+      timestamp: Date.now(),
+    };
+    res.json(questions);
+  } catch (error) {
+    console.error("Error in /api/questions:", error);
     res.status(500).json({ message: "Server Error: Failed to fetch questions" });
   }
 });
@@ -79,20 +110,20 @@ const users = {};
 const userScores = {};
 
 // Create HTTP server and intergrate socket.io
-import { createServer } from "http";
+/*import { createServer } from "http";
 const server = createServer(app);
 import { Server } from "socket.io";
 const io = new Server(server, {
   cors: {
     origin: [
       /* "http://localhost:5173", */
-      "https://final-project-quiz-mania.vercel.app",
+    /*  "https://final-project-quiz-mania.vercel.app",
     ],
 
     methods: ["GET", "POST"],
     credentials: true,
   },
-});
+});  */
 
 // Socket.io connection, runs every time a client connects to our server, giving a socket instance for each one
 io.on("connection", (socket) => {
