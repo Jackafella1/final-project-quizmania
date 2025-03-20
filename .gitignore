@@ -24,4 +24,5 @@ dist-ssr
 *.sw?
 
 .env
+server/.env
 h origin jj-branch

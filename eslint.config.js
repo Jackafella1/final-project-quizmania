@@ -5,7 +5,24 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 
 export default tseslint.config(
+  // Global ignores
   { ignores: ['dist'] },
+  // backend files (.js, .ts)
+  {
+    files: ['**/*.{js,ts}'],
+    extends: [js.configs.recommended, ...tseslint.configs.recommended],
+    languageOptions: {
+      ecmaVersion: 2020,
+      sourceType: 'module', // Since your package.json has "type": "module"
+      globals: globals.node, // Node.js globals for backend
+    },
+    rules: {
+      'no-unused-vars': ['error', { vars: 'all', args: 'after-used', ignoreRestSiblings: false }],
+      'no-undef': 'error',
+    },
+  },
+
+  //frontend files .tsx, .ts
   {
     extends: [js.configs.recommended, ...tseslint.configs.recommended],
     files: ['**/*.{ts,tsx}'],
