@@ -19,8 +19,23 @@ const HOST = process.env.HOST || '0.0.0.0';
 import express, { json } from "express";
 // load cors
 import cors from "cors";
+import { createServer } from "http"; 
+import { Server } from "socket.io"; 
 
 const app = express();
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: [
+      "https://final-project-quiz-mania.vercel.app",
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+});
+// Set timeouts to prevent 502 errors
+server.keepAliveTimeout = 120000; // 120 seconds
+server.headersTimeout = 121000;//Slightly higher than keepAliveTimeout
 
 //console.log('Supabase URL:', supabaseUrl);
 
