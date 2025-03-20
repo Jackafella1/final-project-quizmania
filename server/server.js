@@ -55,14 +55,20 @@ app.use(json());
 // Test API Route
 app.get("/api/questions", async (req, res) => {
   try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000);
+
     const response = await fetch(
-      "https://opentdb.com/api.php?amount=10&type=multiple"
+      "https://opentdb.com/api.php?amount=10&type=multiple",
+      { signal: controller.signal }
     );
+    clearTimeout(timeoutId);
+
     const data = await response.json();
     res.json(data.results);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server Error" });
+    console.error("Error fetching questions:", error);
+    res.status(500).json({ message: "Server Error: Failed to fetch questions" });
   }
 });
 
