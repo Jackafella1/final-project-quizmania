@@ -1,13 +1,11 @@
 services:
   - type: web
-    name: final-project-quiz-mania-backend
+    name: quizmania-5bo6
     env: node
     plan: free
     buildCommand: npm run build
     startCommand: "npm start"
-    rootDir: sever
+    rootDir: server
     envVars:
-      - key: PORT
-        value: 50002
       - key: HOST 
         value: 0.0.0.0

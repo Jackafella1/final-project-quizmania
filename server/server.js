@@ -29,9 +29,9 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://final-project-quiz-mania.vercel.app",
+      
       "https://quizmania-rose.vercel.app",
-      /* "http://localhost:5173", */
+       "http://localhost:5173", 
     ],
 
     methods: ["GET", "POST"],
@@ -44,8 +44,9 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-     "https://final-project-quiz-mania.vercel.app",
+    
       "https://quizmania-rose.vercel.app",
+      "http://localhost:5173"
     ],
 
     methods: ["GET", "POST"],
