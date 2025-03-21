@@ -27,7 +27,7 @@ const server = createServer(app);
 const io = new Server(server, {
   cors: {
     origin: [
-      "https://final-project-quiz-mania.vercel.app",
+      "https://quizmania-rose.vercel.app",
     ],
     methods: ["GET", "POST"],
     credentials: true,
@@ -42,7 +42,7 @@ server.headersTimeout = 121000;//Slightly higher than keepAliveTimeout
 app.use(
   cors({
     origin: [
-      "https://final-project-quiz-mania.vercel.app",
+      "https://quizmania-rose.vercel.app",
       /* "http://localhost:5173", */
     ],
 
@@ -120,7 +120,7 @@ const io = new Server(server, {
   cors: {
     origin: [
       /* "http://localhost:5173", */
-    /*  "https://final-project-quiz-mania.vercel.app",
+    /*  "https://quizmania-rose.vercel.app",
     ],
 
     methods: ["GET", "POST"],
