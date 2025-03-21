@@ -79,6 +79,9 @@ async function fetchQuestions(amount = 10, category = null, difficulty = null, t
     throw error;
   }
 }
+app.get("/", (req, res) => {
+  res.status(200).json({ message: "QuizMania Backend Server is running!" });
+});
 
 // Test API Route
 app.get("/api/questions", async (req, res) => {
