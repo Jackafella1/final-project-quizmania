@@ -19,7 +19,10 @@ export const SocketProvider: React.FC<{ children: React.ReactNode }> = ({
   // when component mounts, it creates a new websocket connection to backend (CHANGE THIS FOR DEPLOYED BACKEND)
   // stores socket instance in state
   useEffect(() => {
-    const newSocket = io("https://quiz-mania-ug0x.onrender.com");
+    const socketUrl = import.meta.env.VITE_SOCKET_URL || "ws://localhost:5002";
+    const newSocket = io(socketUrl, {
+      withCredentials: true,
+    });
 
     setSocket(newSocket);
 
