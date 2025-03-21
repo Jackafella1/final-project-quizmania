@@ -23,25 +23,13 @@ import { createServer } from "http";
 import { Server } from "socket.io"; 
 
 const app = express();
-const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: [
-      "https://quizmania-rose.vercel.app",
-    ],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});
-// Set timeouts to prevent 502 errors
-server.keepAliveTimeout = 120000; // 120 seconds
-server.headersTimeout = 121000;//Slightly higher than keepAliveTimeout
 
-//console.log('Supabase URL:', supabaseUrl);
+// Set up CORS for Express
 
 app.use(
   cors({
     origin: [
+      "https://final-project-quiz-mania.vercel.app",
       "https://quizmania-rose.vercel.app",
       /* "http://localhost:5173", */
     ],
@@ -51,6 +39,40 @@ app.use(
   })
 );
 app.use(json());
+
+const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: [
+     "https://final-project-quiz-mania.vercel.app",
+      "https://quizmania-rose.vercel.app",
+    ],
+
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+}); 
+
+
+
+
+
+/*const server = createServer(app);
+const io = new Server(server, {
+  cors: {
+    origin: [
+      "https://quizmania-rose.vercel.app",
+    ],
+    methods: ["GET", "POST"],
+    credentials: true,
+  },
+}); */
+// Set timeouts to prevent 502 errors
+server.keepAliveTimeout = 120000; // 120 seconds
+server.headersTimeout = 121000;//Slightly higher than keepAliveTimeout
+
+//console.log('Supabase URL:', supabaseUrl);
+
 
 // In-memory cache for questions
 let cachedQuestions = null;
@@ -113,20 +135,8 @@ const users = {};
 const userScores = {};
 
 // Create HTTP server and intergrate socket.io
-/*import { createServer } from "http";
-const server = createServer(app);
-import { Server } from "socket.io";
-const io = new Server(server, {
-  cors: {
-    origin: [
-      /* "http://localhost:5173", */
-    /*  "https://quizmania-rose.vercel.app",
-    ],
+//import { createServer } from "http";
 
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-});  */
 
 // Socket.io connection, runs every time a client connects to our server, giving a socket instance for each one
 io.on("connection", (socket) => {
