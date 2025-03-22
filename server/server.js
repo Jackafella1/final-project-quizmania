@@ -4,12 +4,7 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5002;
 const HOST = process.env.HOST || '0.0.0.0';
-//const supabaseUrl = process.env.SUPABASE_URL;
-//const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-//const supabase = createClient(supabaseUrl, supabaseServiceRoleKey);
-
-//console.log('Supabase URL:', supabaseUrl);
 
 // socket IO allows us to set up web sockets
 // these connect to the sever, and leaves the connection to the server open
@@ -24,55 +19,39 @@ import { Server } from "socket.io";
 
 const app = express();
 
+// Define CORS options
+const corsOptions = {
+  origin: [
+    "https://quizmania-rose.vercel.app",
+    "http://localhost:5173",
+  ],
+  methods: ["GET", "POST"],
+  credentials: true,
+};
+
+// Set up CORS for Express
+app.use(cors(corsOptions));
+app.use(json());
+
 // Set up CORS for Express
 
-app.use(
-  cors({
-    origin: [
-      
-      "https://quizmania-rose.vercel.app",
-       "http://localhost:5173", 
-    ],
 
-    methods: ["GET", "POST"],
-    credentials: true,
-  })
-);
-app.use(json());
 
 const server = createServer(app);
 const io = new Server(server, {
-  cors: {
-    origin: [
-    
-      "https://quizmania-rose.vercel.app",
-      "http://localhost:5173"
-    ],
-
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-}); 
+  cors: corsOptions });
+  
 
 
 
 
 
-/*const server = createServer(app);
-const io = new Server(server, {
-  cors: {
-    origin: [
-      "https://quizmania-rose.vercel.app",
-    ],
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
-}); */
+
 // Set timeouts to prevent 502 errors
 server.keepAliveTimeout = 120000; // 120 seconds
 server.headersTimeout = 121000;//Slightly higher than keepAliveTimeout
 
-//console.log('Supabase URL:', supabaseUrl);
+
 
 
 // In-memory cache for questions
